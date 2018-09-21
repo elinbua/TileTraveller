@@ -1,62 +1,54 @@
 #Github: https://github.com/elinbua/TileTraveller
-#Player starts in tile(1.1) in 3x3 grid.
-#Enter direction according instruction printing on the screen (north/south/east/west).
-#When moving north, 0.1 is added to current tile.
-#When moving south, 0.1 is subtracted from current tile.
-#When moving east, 1 is added to current tile.
-#When moving west, 1 is subtracted from current tile.
-#To be within range of 3x3 grid, lowest number is 1 and highest is 3.3.
-#If the new title is out of range of the 3x3 grid the player will stay on same location.
-#If incorrect letter or direction is entered Invalid message prints on the screen.
-#The game will continue until vicory location (title(3.1)).
 
-num = 1.1
-north = 'nN'    #Valid input for north
-south = 'sS'    #valid input for south
-east = 'eE'     #valid input for east
-west = 'wW'     #vaild input for west
-High = 3.3      #highest value for 3x3 grid
-Low = 1         #lowest value for grid starting from 1
-route = 1       #The route implies possible directions, e.g. in route 1 north is the only possible direction
-count = 0
-
-#Where can be traveled from initial tile(1.1)
-print("You can travel: (N)orth.")
-
-while True:  
+def start_point():
+    """The game starts in num= 1.1 and possible direction is north (route = 1)"""
+    num = 1.1
+    route = 1
+    print("You can travel: (N)orth.")
+    return num, route
+def direction():
+    """Enter direction"""
     direction_str = input("Direction: ")
-    move_north = round(num + 0.1 , 1)
-    move_south = round(num - 0.1, 1)   
-    move_west = round(num - 1.0, 1)   
-    move_east = round(num + 1.0, 1)
+    return direction_str
+
+def move(num, direction_str, route, Low = 1, High = 3.3):
+    """Move player to next position in selected direction. The player can only
+    be moved to direction in valid route.""" 
+    north = 'nN'    
+    south = 'sS'   
+    east = 'eE'
+    west = 'wW'   
     if (route == 1 or route == 2 or route == 6) and direction_str in north:
-        move_north
+        move_north = round(num + 0.1 , 1)
         if Low < move_north <= High:
             num = move_north
         else:
             num = num
     elif (route == 2 or route == 3 or route == 4 or route == 6) and direction_str in south:
-        move_south
+        move_south = round(num - 0.1, 1)
         if Low < move_south <= High:
             num = move_south
         else:
             num = num
     elif (route == 2 or route == 3 or route == 5) and direction_str in east:
-        move_east
+        move_east = round(num + 1.0, 1)
         if Low < move_east <= High:
             num = move_east
         else:
             num = num
     elif (route == 4 or route == 5) and direction_str in west:
-        move_west
+        move_west = round(num - 1.0, 1) 
         if Low < move_west <= High:
             num = move_west
         else:
             num = num
     else:
+        num = num
         print("Not a valid direction!")
-        continue
-    
+    return num
+
+def new_route(num):
+    """Where can player travel from current position"""
     if num == 1.1 or num == 2.1:
         route = 1
         print("You can travel: (N)orth.")
@@ -77,5 +69,15 @@ while True:
         print("You can travel: (N)orth or (S)outh.")
     elif num == 3.1:
         print("Victory!")
+    return route
+
+count = 0
+end = 3.1
+num, route = start_point()
+while True:  
+    direction_str = direction()
+    num = move(num, direction_str, route)
+    route = new_route(num)
+    if num == end:
         break
-    count += 1
+    count +=1
