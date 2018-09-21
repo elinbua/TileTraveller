@@ -17,7 +17,8 @@ def move(num, direction_str, route, Low = 1, High = 3.3):
     north = 'nN'    
     south = 'sS'   
     east = 'eE'
-    west = 'wW'   
+    west = 'wW'
+    valid = 1  
     if (route == 1 or route == 2 or route == 6) and direction_str in north:
         move_north = round(num + 0.1 , 1)
         if Low < move_north <= High:
@@ -43,9 +44,9 @@ def move(num, direction_str, route, Low = 1, High = 3.3):
         else:
             num = num
     else:
-        num = num
+        valid = 0
         print("Not a valid direction!")
-    return num
+    return num, valid
 
 def new_route(num):
     """Where can player travel from current position"""
@@ -73,11 +74,15 @@ def new_route(num):
 
 count = 0
 end = 3.1
+valid = 1
 num, route = start_point()
 while True:  
     direction_str = direction()
-    num = move(num, direction_str, route)
-    route = new_route(num)
+    num, valid = move(num, direction_str, route)
+    if valid == 0:
+        continue
+    else:
+        route = new_route(num)
     if num == end:
         break
     count +=1
